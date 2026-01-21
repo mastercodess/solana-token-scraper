@@ -1,0 +1,13 @@
+{
+  "scan_interval_seconds": 30,
+  "hard_filters": {
+    "min_liquidity_usd": 5000,
+    "min_maker_count": 20
+  },
+  "scoring": {
+    "min_score": 5,
+    "age_weight": 1.0,
+    "volume_weight": 1.0,
+    "momentum_weight": 0.5
+  }
+}
