@@ -1,0 +1,40 @@
+{
+  "pairs": [
+    {
+      "chainId": "solana",
+      "pairAddress": "PAIR_FRESH",
+      "baseToken": {
+        "address": "FRESH_TOKEN_123",
+        "name": "FreshToken",
+        "symbol": "FRESH"
+      },
+      "priceUsd": "0.00123",
+      "liquidity": {"usd": 15000},
+      "volume": {"h24": 75000},
+      "txns": {
+        "h24": {"buys": 50, "sells": 30}
+      },
+      "priceChange": {
+        "m5": 15.5,
+        "h1": 45.2
+      },
+      "pairCreatedAt": 1769044362839
+    },
+    {
+      "chainId": "solana",
+      "pairAddress": "PAIR_LOW_LIQ",
+      "baseToken": {
+        "address": "LOW_LIQ_TOKEN",
+        "name": "LowLiqToken",
+        "symbol": "LOWLIQ"
+      },
+      "priceUsd": "0.00050",
+      "liquidity": {"usd": 1000},
+      "volume": {"h24": 5000},
+      "txns": {
+        "h24": {"buys": 10, "sells": 5}
+      },
+      "pairCreatedAt": 1769044362839
+    }
+  ]
+}
