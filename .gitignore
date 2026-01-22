@@ -43,3 +43,4 @@ logs/
 # Project specific
 config.local.json
 test_data/
+.coverage
