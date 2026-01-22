@@ -3,7 +3,9 @@ import sys
 import time
 import signal
 import logging
+import argparse
 from pathlib import Path
+from datetime import datetime
 from rich.live import Live
 from src.config_manager import ConfigManager
 from src.dexscreener_client import DexScreenerClient
@@ -104,16 +106,85 @@ class SolanaScraperOrchestrator:
         print(f"Total duplicates filtered: {self.dashboard.total_duplicates}")
         print("="*60)
 
+    def verify_token(self, address: str) -> None:
+        """Verify a specific token against filters"""
+        print(f"\nVerifying token: {address}\n")
+
+        tokens = self.client.fetch_solana_tokens()
+
+        for token in tokens:
+            if token.address == address:
+                print(f"Token found: {token.name} ({token.symbol})")
+                print(f"Liquidity: ${token.liquidity_usd:,.2f}")
+                print(f"Maker count: {token.maker_count}")
+                print(f"Age: {datetime.now() - token.created_at}")
+
+                score = self.token_filter.score_token(token)
+
+                if score:
+                    print(f"\nScore Breakdown:")
+                    print(f"  Age score: {score.age_score}")
+                    print(f"  Volume score: {score.volume_score}")
+                    print(f"  Momentum score: {score.momentum_score}")
+                    print(f"  Total: {score.total_score}")
+                    print(f"\nResult: {'✅ PASS' if score.passed else '❌ FAIL'}")
+                else:
+                    print("\nResult: ❌ FAIL (hard filter)")
+
+                return
+
+        print("Token not found in current DexScreener data")
+
 
 def main():
     """Entry point for CLI"""
-    config_path = Path("config.json")
+    parser = argparse.ArgumentParser(description="Solana Token Scraper")
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=Path("config.json"),
+        help="Path to config file (default: config.json)"
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug logging"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Run once and show stats only (no dashboard)"
+    )
+    parser.add_argument(
+        "--verify-token",
+        type=str,
+        help="Verify specific token address against filters"
+    )
 
-    if not config_path.exists():
-        logger.error(f"Config file not found: {config_path}")
+    args = parser.parse_args()
+
+    # Set log level
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    # Check config exists
+    if not args.config.exists():
+        logger.error(f"Config file not found: {args.config}")
         sys.exit(1)
 
-    orchestrator = SolanaScraperOrchestrator(config_path)
+    orchestrator = SolanaScraperOrchestrator(args.config)
+
+    # Handle special modes
+    if args.verify_token:
+        orchestrator.verify_token(args.verify_token)
+        return
+
+    if args.dry_run:
+        orchestrator._scan_once()
+        orchestrator._print_summary()
+        return
+
+    # Normal run
     orchestrator.run()
 
 
