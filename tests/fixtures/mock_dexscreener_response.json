@@ -18,7 +18,7 @@
         "m5": 15.5,
         "h1": 45.2
       },
-      "pairCreatedAt": 1769044362839
+      "pairCreatedAt": 1769047265975
     },
     {
       "chainId": "solana",
@@ -34,7 +34,7 @@
       "txns": {
         "h24": {"buys": 10, "sells": 5}
       },
-      "pairCreatedAt": 1769044362839
+      "pairCreatedAt": 1769047265975
     }
   ]
 }

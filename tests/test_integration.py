@@ -36,7 +36,7 @@ def test_end_to_end_scan_filters_correctly(mock_api_response, tmp_path):
     mock_response.json.return_value = mock_api_response
     mock_response.status_code = 200
 
-    with patch('requests.get', return_value=mock_response):
+    with patch('src.dexscreener_client.requests.get', return_value=mock_response):
         # Create orchestrator
         orchestrator = SolanaScraperOrchestrator(config_path)
 
