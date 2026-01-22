@@ -39,8 +39,8 @@ class Dashboard:
 
     def update_stats(self, scanned: int, duplicates: int) -> None:
         """Update scan statistics"""
-        self.total_scanned = scanned
-        self.total_duplicates = duplicates
+        self.total_scanned += scanned
+        self.total_duplicates += duplicates
         self.last_scan = datetime.now()
 
     def render(self, next_scan_in: int) -> Panel:
@@ -74,8 +74,8 @@ class Dashboard:
             match_text.append(f"Age: {age_str} | Liquidity: {liq_str} | Volume: {vol_str}\n")
 
             # Price and momentum
-            price_5m = f"+{token.price_change_5m:.1f}%" if token.price_change_5m else "N/A"
-            price_1h = f"+{token.price_change_1h:.1f}%" if token.price_change_1h else "N/A"
+            price_5m = f"{token.price_change_5m:+.1f}%" if token.price_change_5m is not None else "N/A"
+            price_1h = f"{token.price_change_1h:+.1f}%" if token.price_change_1h is not None else "N/A"
             match_text.append(
                 f"Makers: {token.maker_count} | "
                 f"Price: ${token.price_usd:.6f} "

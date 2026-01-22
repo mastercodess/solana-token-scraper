@@ -14,6 +14,9 @@ from src.token_cache import TokenCache
 from src.dashboard import Dashboard, MatchedToken
 
 
+# Ensure logs directory exists
+Path('logs').mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -75,6 +78,9 @@ class SolanaScraperOrchestrator:
                     duplicate_count += 1
                     continue
 
+                # Mark as seen immediately
+                self.cache.mark_seen(token.address)
+
                 # Score token
                 score = self.token_filter.score_token(token)
 
@@ -82,7 +88,6 @@ class SolanaScraperOrchestrator:
                     # Add to dashboard
                     matched = MatchedToken(token=token, score=score)
                     self.dashboard.add_match(matched)
-                    self.cache.mark_seen(token.address)
                     logger.info(f"Match found: {token.symbol} - Score: {score.total_score}")
 
             # Update stats
